@@ -105,17 +105,17 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 file = strcat(pathname,filename);
 fileInfo = dir(filename);
 fileSize = fileInfo.bytes;
-if floor(fileSize/1024) > 4
+if floor(fileSize/1024) > 100000000
    f = msgbox('Warning! The file size should not exceed 4kb.Please try again with another file with size less than 4kb .','File Size Error','warn');
 else
 %set(handles.edit5,'String',floor(fileSize/1024));
-g = figure;
 if strfind(filename,'jpg')> 0
+    g = figure;
     imshow(file);
-elseif strfind(filename,'mp3')|strfind(filename,'mp3')> 0
-    [y,Fs] = audioread(file);
-    player = audioplayer(y,Fs);
-    play(player);
+elseif strfind(filename,'mp3')> 0
+    Audioplayer
+elseif strfind(filename,'mp4')> 0
+    implay(file);
 end;
 
 end;
