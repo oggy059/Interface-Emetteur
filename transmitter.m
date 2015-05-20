@@ -101,24 +101,26 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[filename pathname] = uigetfile({'*.jpg';'*.mp3';'*wav'},'File Selector');
+[filename,pathname] = uigetfile({'*.jpg';'*.mp3';'*wav';'*.mp4';'*avi'},'File Selector');
 file = strcat(pathname,filename);
-fileInfo = dir(filename);
-fileSize = fileInfo.bytes;
-if floor(fileSize/1024) > 100000000
-   f = msgbox('Warning! The file size should not exceed 4kb.Please try again with another file with size less than 4kb .','File Size Error','warn');
-else
-%set(handles.edit5,'String',floor(fileSize/1024));
+handles = guidata(hObject);
 if strfind(filename,'jpg')> 0
     g = figure;
     imshow(file);
 elseif strfind(filename,'mp3')> 0
-    Audioplayer
-elseif strfind(filename,'mp4')> 0
-    implay(file);
-end;
-
-end;
+    [y,f]=audioread(filename);
+    pl=audioplayer(y,f);
+    handles.pl=pl;
+    resume(pl);
+    guidata(hObject,handles);
+elseif strfind(filename,'avi')> 0
+    implay(file,100);
+    [y,f]=audioread(filename);
+    pl=audioplayer(y,f);
+    handles.pl=pl;
+    resume(pl);
+    guidata(hObject,handles);
+ end;
 
 % --- Executes on selection change in listbox1.
 function listbox1_Callback(hObject, eventdata, handles)
