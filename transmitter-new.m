@@ -128,15 +128,12 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 [filename,pathname] = uigetfile({'*.jpg';'*.mp3';'*wav';'*.mp4';'*avi'},'File Selector');
 file = strcat(pathname,filename);
 handles = guidata(hObject);
+setappdata(0,'file',file);
 if strfind(filename,'jpg')> 0
     g = figure;
     imshow(file);
 elseif strfind(filename,'mp3')> 0
-    [y,f]=audioread(filename);
-    pl=audioplayer(y,f);
-    handles.pl=pl;
-    resume(pl);
-    guidata(hObject,handles);
+    Audioplayer;
 elseif strfind(filename,'avi')> 0
     implay(filename);
     [y,f]=audioread(filename);
