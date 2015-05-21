@@ -22,7 +22,7 @@ function varargout = Audioplayer(varargin)
 
 % Edit the above text to modify the response to help Audioplayer
 
-% Last Modified by GUIDE v2.5 19-May-2015 11:50:53
+% Last Modified by GUIDE v2.5 21-May-2015 16:00:26
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -68,7 +68,6 @@ function varargout = Audioplayer_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
@@ -81,7 +80,8 @@ function slider1_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
+% SL = get(handles.slider1,{'min','value','max'});
+% set(handles.edit1,'string',SL{2});
 
 % --- Executes during object creation, after setting all properties.
 function slider1_CreateFcn(hObject, eventdata, handles)
@@ -94,18 +94,14 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
-% --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton3 (see GCBO)
+% --- Executes on button press in pushbutton4.
+function pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-filename = uigetfile('*.*');
-handles = guidata(hObject);
-%On definit le filename comme handles.filename pour que l'autre hObject
-%peut faire appel
-handles.filename = filename;
-guidata(hObject,handles);
-
+global pl stop_pl;
+stop_pl = 0;
+stop (pl); % Stop mp3 playback
 
 
 % --- Executes on button press in pushbutton1.
@@ -113,52 +109,33 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-v=handles.filename;
-[y f]=audioread(v);
+global pl stop_pl;
+stop_pl = 1;
+file = getappdata(0,'file');
+%On definit le filename comme handles.filename pour que l'autre hObject
+%peut faire appel
+[y,f]=audioread(file);
 pl=audioplayer(y,f);
 handles.pl=pl;
 resume(pl);
-
-while(isplaying(pl)),
-      c=get(pl,'CurrentSample');
-      set(handles.edit1,'String',c);
-end;
-
 t=get(pl,'TotalSamples');
-set(handles.slider1,'Value',c/t);
 guidata(hObject,handles);
-
-
-
-
-
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-pl = handles.pl;
-pause(pl);
-
-
-
-function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit1 as text
-%        str2double(get(hObject,'String')) returns contents of edit1 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
+while (stop_pl == 1)
+    c=get(pl,'CurrentSample');
+    sliderval = c/t;
+    set(handles.slider1,'Value',sliderval);
+    guidata(hObject, handles);
+    pause(.1);
 end
+
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global pl stop_pl;
+stop_pl = 0;
+stop (pl);
+% Hint: delete(hObject) closes the figure
+delete(hObject);
