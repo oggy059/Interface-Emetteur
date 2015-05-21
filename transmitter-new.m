@@ -22,7 +22,7 @@ function varargout = Transmitter(varargin)
 
 % Edit the above text to modify the response to help Transmitter
 
-% Last Modified by GUIDE v2.5 21-May-2015 14:23:18
+% Last Modified by GUIDE v2.5 21-May-2015 17:07:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -135,12 +135,13 @@ if strfind(filename,'jpg')> 0
 elseif strfind(filename,'mp3')> 0
     Audioplayer;
 elseif strfind(filename,'avi')> 0
-    implay(filename);
-    [y,f]=audioread(filename);
-    pl=audioplayer(y,f);
-    handles.pl=pl;
-    resume(pl);
-    guidata(hObject,handles);
+%     implay(filename);
+%     [y,f]=audioread(filename);
+%     pl=audioplayer(y,f);
+%     handles.pl=pl;
+%     resume(pl);
+%     guidata(hObject,handles);
+    movieCommand;
 elseif strfind(filename,'mp4') >0
     implay(filename);
     [y,f]=audioread(filename);
@@ -305,10 +306,42 @@ function uipanel6_SelectionChangeFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
     case 'radiobutton1'
-        set(handles.radiobutton3,'Enable','on'); 
-        set(handles.radiobutton4,'Enable','on');  
+        global rb;
+        rb = 1;
+        set(handles.checkbox1,'Enable','on');
+        set(handles.checkbox2,'Enable','on');
+        set(handles.checkbox1,'Value',1);
+        set(handles.checkbox2,'Value',0);
     case 'radiobutton2'
-        set(handles.radiobutton3,'Enable','off');
-        set(handles.radiobutton4,'Enable','off');
+        rb = 0;
+        set(handles.checkbox1,'Value',1);
+        set(handles.checkbox2,'Value',1);
+        set(handles.checkbox1,'Enable','off');
+        set(handles.checkbox2,'Enable','off');
         
+end
+
+
+% --- Executes on button press in checkbox1.
+function checkbox1_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox1
+global rb;
+if (get(hObject,'Value') == get(hObject,'Max'))&&(rb == 1);
+	set(handles.checkbox2,'Value',0);
+end
+
+% --- Executes on button press in checkbox2.
+function checkbox2_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox2
+global rb;
+if (get(hObject,'Value') == get(hObject,'Max'))&&(rb == 1);
+	set(handles.checkbox1,'Value',0);
 end
