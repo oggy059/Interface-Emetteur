@@ -22,7 +22,7 @@ function varargout = Transmitter(varargin)
 
 % Edit the above text to modify the response to help Transmitter
 
-% Last Modified by GUIDE v2.5 20-May-2015 16:28:23
+% Last Modified by GUIDE v2.5 21-May-2015 14:23:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -72,59 +72,44 @@ function varargout = Transmitter_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = handles.output;
 
-
-% --- Executes on selection change in popupmenu1.
+% --- Executes on selection change in popupmenu2.
 function popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+% hObject    handle to popupmenu2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
-filename = handles.filename;
-fileInfo = dir(filename);
-fileSize = fileInfo.bytes/1024;
-contents = (get(hObject,'Value'));
-switch contents
-    case 1
-        t=fileSize/6;
-        strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);
-    case 2
-        t=fileSize/9;
-        strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);
-    case 3
-          t=fileSize/12;
-          strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);
-    case 4
-        t=fileSize/18;
-        strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);
-    case 5
-        t=fileSize/24;
-        strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);
-    case 6
-        t=fileSize/36;
-        strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);  
-    case 7
-        t=fileSize/48;
-        strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);  
-    case 8
-        t=fileSize/54;
-        strH = sprintf('%.2f s', t);
-        set(handles.edit2,'String',strH);  
-end
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu2
 
 
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+% hObject    handle to popupmenu2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes on selection change in popupmenu2.
+function popupmenu2_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu2
+
+
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -153,7 +138,14 @@ elseif strfind(filename,'mp3')> 0
     resume(pl);
     guidata(hObject,handles);
 elseif strfind(filename,'avi')> 0
-    implay(file);
+    implay(filename);
+    [y,f]=audioread(filename);
+    pl=audioplayer(y,f);
+    handles.pl=pl;
+    resume(pl);
+    guidata(hObject,handles);
+elseif strfind(filename,'mp4') >0
+    implay(filename);
     [y,f]=audioread(filename);
     pl=audioplayer(y,f);
     handles.pl=pl;
@@ -173,48 +165,47 @@ function listbox1_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns listbox1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listbox1
-items = get(hObject,'String');
 index_selected = get(hObject,'Value');
 switch index_selected
     case 1
         strH = sprintf('2,41 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 2
         strH = sprintf('2,415 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 3
         strH = sprintf('2,42 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 4
         strH = sprintf('2,425 GHz');
-        set(handles.edit3,'String',strH);        
+        set(handles.edit2,'String',strH);        
     case 5
         strH = sprintf('2,43 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 6
         strH = sprintf('2,435 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 7
         strH = sprintf('2,44 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 8
         strH = sprintf('2,445 GHz');
-        set(handles.edit3,'String',strH);              
+        set(handles.edit2,'String',strH);              
     case 9
         strH = sprintf('2,45 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 10
         strH = sprintf('2,455 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 11
         strH = sprintf('2,46 GHz');
-        set(handles.edit3,'String',strH);
+        set(handles.edit2,'String',strH);
     case 12
         strH = sprintf('2,465 GHz');
-        set(handles.edit3,'String',strH);  
+        set(handles.edit2,'String',strH);  
     case 13
         strH = sprintf('2,47 GHz');
-        set(handles.edit3,'String',strH);        
+        set(handles.edit2,'String',strH);        
 end;
 
 % --- Executes during object creation, after setting all properties.
@@ -230,6 +221,7 @@ function listbox1_CreateFcn(hObject, eventdata, handles)
 % end
 
 
+
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
@@ -241,17 +233,17 @@ msgbox('The file has been successfully transmitted!','Transmission complete');
 
 
 function edit1_Callback(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+% hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+% Hints: get(hObject,'String') returns contents of edit2 as text
+%        str2double(get(hObject,'String')) returns contents of edit2 as a double
 
 
 % --- Executes during object creation, after setting all properties.
 function edit1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+% hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -263,17 +255,17 @@ end
 
 
 function edit2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+% hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+% Hints: get(hObject,'String') returns contents of edit2 as text
+%        str2double(get(hObject,'String')) returns contents of edit2 as a double
 
 
 % --- Executes during object creation, after setting all properties.
 function edit2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+% hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -285,17 +277,17 @@ end
 
 
 function edit3_Callback(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+% hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of edit3 as text
-%        str2double(get(hObject,'String')) returns contents of edit3 as a double
+% Hints: get(hObject,'String') returns contents of edit2 as text
+%        str2double(get(hObject,'String')) returns contents of edit2 as a double
 
 
 % --- Executes during object creation, after setting all properties.
 function edit3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit3 (see GCBO)
+% hObject    handle to edit2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -323,13 +315,3 @@ switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
         set(handles.radiobutton4,'Enable','off');
         
 end
-
-
-% --- Executes when selected object is changed in uipanel16.
-function uipanel16_SelectionChangeFcn(hObject, eventdata, handles)
-% hObject    handle to the selected object in uipanel16 
-% eventdata  structure with the following fields (see UIBUTTONGROUP)
-%	EventName: string 'SelectionChanged' (read only)
-%	OldValue: handle of the previously selected object or empty if none was selected
-%	NewValue: handle of the currently selected object
-% handles    structure with handles and user data (see GUIDATA)
