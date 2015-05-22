@@ -101,7 +101,7 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global pl stop_pl;
 stop_pl = 0;
-stop (pl); % Stop mp3 playback
+stop (pl); % Stop audio file
 
 
 % --- Executes on button press in pushbutton1.
@@ -111,17 +111,17 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global pl stop_pl;
 stop_pl = 1;
-file = getappdata(0,'file');
+file = getappdata(0,'file');%Call value from main GUI
 %On definit le filename comme handles.filename pour que l'autre hObject
 %peut faire appel
-[y,f]=audioread(file);
+[y,f]=audioread(file);%Read audio file
 pl=audioplayer(y,f);
 handles.pl=pl;
-resume(pl);
-t=get(pl,'TotalSamples');
+resume(pl);%Play file
+t=get(pl,'TotalSamples');%get the Total Sample of running audio
 guidata(hObject,handles);
-while (stop_pl == 1)
-    c=get(pl,'CurrentSample');
+while (stop_pl == 1)%if stop button is not clicked
+    c=get(pl,'CurrentSample');%get the Current Sample(it changes every second)
     sliderval = c/t;
     set(handles.slider1,'Value',sliderval);
     guidata(hObject, handles);
@@ -130,7 +130,7 @@ end
 
 
 % --- Executes when user attempts to close figure1.
-function figure1_CloseRequestFcn(hObject, eventdata, handles)
+function figure1_CloseRequestFcn(hObject, eventdata, handles)%We stop the sound from playing if user close the window
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
