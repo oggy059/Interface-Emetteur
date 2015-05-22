@@ -125,27 +125,21 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[filename,pathname] = uigetfile({'*.jpg';'*.mp3';'*wav';'*.mp4';'*avi'},'File Selector');
-file = strcat(pathname,filename);
+[filename,pathname] = uigetfile({'*.jpg';'*.mp3';'*wav';'*.mp4';'*avi'},'File Selector');%Enable user to browse file
+file = strcat(pathname,filename);%Compile fullpath to the selected file
 handles = guidata(hObject);
-setappdata(0,'file',file);
+setappdata(0,'file',file);%store the value in GUI, so that other GUI can recall
 if strfind(filename,'jpg')> 0
-    g = figure;
-    imshow(file);
+    figure;%Open a new figure
+    imshow(file);%display image selected
 elseif strfind(filename,'mp3')> 0
     Audioplayer;
 elseif strfind(filename,'avi')> 0
-%     implay(filename);
-%     [y,f]=audioread(filename);
-%     pl=audioplayer(y,f);
-%     handles.pl=pl;
-%     resume(pl);
-%     guidata(hObject,handles);
-    movieCommand;
-elseif strfind(filename,'mp4') >0
-    implay(filename);
+    movieCommand;%call gui movieCommand
+elseif strfind(filename,'mp4') >0 
+    implay(filename);%Matlab cannot play audio from mp4 video, so we use implay
     [y,f]=audioread(filename);
-    pl=audioplayer(y,f);
+    pl=audioplayer(y,f);% And play its audio simultaneously
     handles.pl=pl;
     resume(pl);
     guidata(hObject,handles);
@@ -163,11 +157,11 @@ function listbox1_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns listbox1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listbox1
-index_selected = get(hObject,'Value');
+index_selected = get(hObject,'Value'); %get the Value selected, ex: For Channel 1, Value = 1 
 switch index_selected
-    case 1
-        strH = sprintf('2,41 GHz');
-        set(handles.edit2,'String',strH);
+    case 1% if Channel is selected
+        strH = sprintf('2,41 GHz');%Format data into String
+        set(handles.edit2,'String',strH);%Display the String variable
     case 2
         strH = sprintf('2,415 GHz');
         set(handles.edit2,'String',strH);
@@ -204,7 +198,7 @@ switch index_selected
     case 13
         strH = sprintf('2,47 GHz');
         set(handles.edit2,'String',strH);        
-end;
+end;%end switch 
 
 % --- Executes during object creation, after setting all properties.
 function listbox1_CreateFcn(hObject, eventdata, handles)
@@ -307,17 +301,17 @@ function uipanel6_SelectionChangeFcn(hObject, eventdata, handles)
 switch get(eventdata.NewValue,'Tag') % Get Tag of selected object.
     case 'radiobutton1'
         global rb;
-        rb = 1;
-        set(handles.checkbox1,'Enable','on');
-        set(handles.checkbox2,'Enable','on');
-        set(handles.checkbox1,'Value',1);
-        set(handles.checkbox2,'Value',0);
+        rb = 1;%if SISO is selected
+        set(handles.checkbox1,'Enable','on');%Enable to select checkbox1
+        set(handles.checkbox2,'Enable','on');%Enable to select checkbox2
+        set(handles.checkbox1,'Value',1);%Select checkbox1 by default
+        set(handles.checkbox2,'Value',0);%Unselect checkbox2 by default
     case 'radiobutton2'
-        rb = 0;
-        set(handles.checkbox1,'Value',1);
-        set(handles.checkbox2,'Value',1);
-        set(handles.checkbox1,'Enable','off');
-        set(handles.checkbox2,'Enable','off');
+        rb = 0;%if MIMO is selected, we need to select both option and prevent the user to change the selection
+        set(handles.checkbox1,'Value',1);%Select checkbox1
+        set(handles.checkbox2,'Value',1);%Select checkbox2
+        set(handles.checkbox1,'Enable','off');%Disable to select checkbox1
+        set(handles.checkbox2,'Enable','off');%Disable to select checkbox2
         
 end
 
@@ -329,10 +323,15 @@ function checkbox1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox1
-global rb;
+global rb;% call value from uipanel6
+% if checkbox1 is selected and rb = 1(SISO is selected)
 if (get(hObject,'Value') == get(hObject,'Max'))&&(rb == 1);
-	set(handles.checkbox2,'Value',0);
+	set(handles.checkbox2,'Value',0);%unselect checkbox2 to assure only one is selected
+else
+% if checkbox1 is unselected(to avoid none of the option is selected) 
+    set(handles.checkbox2,'Value',1);%select checkbox1
 end
+
 
 % --- Executes on button press in checkbox2.
 function checkbox2_Callback(hObject, eventdata, handles)
@@ -341,7 +340,11 @@ function checkbox2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox2
-global rb;
+global rb;% call value from uipanel6
+% if checkbox2 is selected and rb = 1(SISO is selected)
 if (get(hObject,'Value') == get(hObject,'Max'))&&(rb == 1);
-	set(handles.checkbox1,'Value',0);
+	set(handles.checkbox1,'Value',0);%unselect checkbox1 to assure only one is selected
+else
+% if checkbox2 is unselected(to avoid none of the option is selected) 
+    set(handles.checkbox1,'Value',1);%select checkbox1
 end
